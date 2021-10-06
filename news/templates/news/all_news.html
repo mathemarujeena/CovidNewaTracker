@@ -1,0 +1,101 @@
+{% extends "news/base.html" %}
+{% load static %}
+{% block content%}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <h5>Filter</h5>
+            <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'filter-by-date' %}">
+                <h6>By Date</h6>
+                <div class="input-group">
+                    <select class="form-control bg-light border-0 small" name='filterByDate' onchange="this.form.submit()">
+                        <option value='today'>Today</option>
+                        <option value='latest'>Latest</option>
+                        <option value='oldest'>Oldest</option>
+                    </select>
+                    <!-- <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search"></i>
+                        </button>
+                    </div> -->
+                </div>
+            </form>
+        </div>
+        <div class="col-md-8">
+        {% for news in news%}
+            <div class="masonry-box" style="width: 100% !important">
+                <div class="blog-box" id="{{news.slug}}" data-heading="{{news.title}}" 
+                 data-published="{{news.date_published}}" data-news="{{news.content}}" 
+                data-author="{{news.author}}"
+                data-toggle="modal" data-target="">
+            
+                <div class="blog-meta">
+                    <h4><a href="/news/{{news.slug}}" title="">{{news.title}}</a></h4>
+                    <p class="text-justify">{{news.excerpt}}</p>
+                    <small>{{news.author}}</small>
+                    <small>{{news.date_published}}</small>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+{% comment %}
+{% if is_paginated %}
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in paginator.page_range %}
+      {% if page_obj.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+{% endcomment %}
+
+
+<nav>
+    <ul class="pagination justify-content-center">
+        <li class="page-item {% if not news.has_previous %} disabled {% endif %}">
+            <a class="page-link" href="{% if news.has_previous %} ?page={{ news.previous_page_number }}{% endif %} ">Previous</a>
+        </li>
+  
+        {% if news.number|add:'-1' > 1 %}
+            <li class="page-item disabled"><a class="page-link">&hellip;</a></li>
+        {% endif %}
+  
+        {% for i in news.paginator.page_range %}
+            {% if news.number == i %}
+                <li class="active page-item disabled"><a class="page-link" href="#">{{ i }}</a></li>
+            {% elif i > news.number|add:'-2' and i < news.number|add:'2' %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+  
+        {% if news.paginator.num_pages > news.number|add:'1' %}
+            <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
+        {% endif %}
+  
+        <li class="page-item {% if not news.has_next %} disabled {% endif %}">
+            <a class="page-link" href="{% if news.has_next %} ?page={{ news.next_page_number }} {% endif %}">Next</a>
+        </li>
+    </ul>
+  </nav>  
+
+
+
+<script src="{% static 'all_news.js' %}" type="text/JavaScript"></script>
+{% endblock %}
