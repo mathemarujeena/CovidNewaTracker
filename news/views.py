@@ -12,10 +12,11 @@ from scrapy.utils.project import get_project_settings
 import os
 from scrapyd_api import ScrapydAPI
 from scrapy.settings import Settings
-# from crawling.crawling import settings as my_settings
 from crawling.crawling.spiders import newsapi
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
+from django.core import management
+
 
 
 def is_scraper(user):
@@ -27,33 +28,11 @@ def news_scrape(request):
     if request.method == 'POST':
         forms = NewsForm(request.POST)
         if forms.is_valid():
-            # print(forms.source)
+            if form.cleaned_data.get('source') == 'newsapi':
+                management.call_command('crawl_newsapi')
+            else:
+                management.call_command('crawl_nepalitimes')
             messages.success(request, f'News scrapped successfully!')
-            # is_private = request.POST.get('is_private', False)
-            # process = CrawlerProcess()
-            # process.crawl(forms.scrape_from)
-            # process.start()
-            # os.environ.setdefault("SCRAPY_SETTINGS_MODULE", "crawling")
-            # process = CrawlerProcess(get_project_settings())
-            # process.crawl('NewsapiSpider')
-            # process.start()
-            # crawler_settings = get_project_settings()
-            # print(crawler_settings,'----------------------------------')
-            # crawler = CrawlerRunner(crawler_settings)
-            # print(crawler,'***************************')
-            # crawler.crawl('newsapi')
-
-            # scrapyd = ScrapydAPI('http://localhost:1111')
-            # scrapyd.schedule('crawling', 'newsapi')
-            # crawler_settings = Settings()
-            # crawler_settings.setmodule(my_settings)
-            # process = CrawlerProcess(settings=crawler_settings)
-            # process.crawl(NewsapiSpider)
-            # process.start()
-
-            process = CrawlerProcess(get_project_settings())
-            process.crawl(TheodoSpider)
-            process.start()
             return redirect('all-news')
     else:
         forms = NewsForm()

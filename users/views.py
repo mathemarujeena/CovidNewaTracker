@@ -4,6 +4,9 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 
+def welcome(request):
+	return render (request=request, template_name="users/welcome.html")
+
 def register_request(request):
 	if request.method == "POST":
 		form = NewUserForm(request.POST)

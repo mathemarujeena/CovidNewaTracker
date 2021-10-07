@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'news',
     'crispy_forms',
     'users.apps.UsersConfig',
+    'crawling'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
