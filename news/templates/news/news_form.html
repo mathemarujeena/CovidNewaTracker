@@ -3,10 +3,13 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{ forms|crispy }}
-        <button type="submit" class="btn btn-primary">Scrape</button>
-    </form>
+    {% if perms.news.add_news %}
+    <h5>News Scrapping! Please Select a Source To Scrape!</h5>
+        <form method="post">
+            {% csrf_token %}
+            {{ forms|crispy }}
+            <button type="submit" class="btn btn-primary">Scrape</button>
+        </form>
+    {% endif %}
     
 {% endblock %}

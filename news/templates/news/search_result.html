@@ -4,7 +4,7 @@
 
 <div class="container">
 
-    <br />
+    <br/>
 
     {% if request.GET.q != '' %}
     {% if results %}
@@ -13,94 +13,63 @@
             <div class="blog-list clearfix">
                 <div class="section-title">
                     <h5>Results for News <b>{{ request.GET.q }}</b></h5>
-                    <!-- <h3 class="color-green"><a href="blog-category-01.html" title="">Searched News</a></h3> -->
-                </div><!-- end title -->
+                </div>
                 {% for result in results%}
                 <div class="blog-box row " id="{{result.slug}}" data-title="{{result.title}}"
                      data-published="{{result.date_published}}"
                     data-news="{{result.content}}" data-author="{{result.author}}" data-toggle="modal"
                     data-target="">
                     <div class="col-md-4">
-                    <!-- <a href="/news/{{result.slug}}" title="">
-                    </a> -->
-                       
-                    </div><!-- end col -->
+
+                    </div>
                     <div class="blog-meta big-meta col-md-8">
-                        <h4>{{result.title}}
+                        <h4><a href="/news/{{result.slug}}" title="">{{result.title}}</a>
                         </h4>
                         <p class="text-justify">{{result.excerpt}}</p>
                         <small>{{result.date_published}}</small>
                         <small>by {{result.author}}</a></small>
-                       
-                        
-                    </div><!-- end meta -->
-                </div><!-- end blog-box -->
+                    </div>
+                </div>
                 <hr class="invis">
                 {% endfor %}
-            </div><!-- end blog-list -->
+            </div>
             <hr class="invis">
-            </div><!-- row -->
-        </div><!-- end col -->
+            </div>
+
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item {% if not results.has_previous %} disabled {% endif %}">
+                    <a class="page-link" href="{% if results.has_previous %} ?page={{ results.previous_page_number }}{% endif %} ">Previous</a>
+                </li>
+          
+                {% if results.number|add:'-1' > 1 %}
+                    <li class="page-item disabled"><a class="page-link">&hellip;</a></li>
+                {% endif %}
+          
+                {% for i in results.paginator.page_range %}
+                    {% if results.number == i %}
+                        <li class="active page-item disabled"><a class="page-link" href="#">{{ i }}</a></li>
+                    {% elif i > results.number|add:'-2' and i < results.number|add:'2' %}
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+          
+                {% if results.paginator.num_pages > results.number|add:'1' %}
+                    <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
+                {% endif %}
+          
+                <li class="page-item {% if not results.has_next %} disabled {% endif %}">
+                    <a class="page-link" href="{% if results.has_next %} ?page={{ results.next_page_number }} {% endif %}">Next</a>
+                </li>
+            </ul>
+          </nav>  
         
-    </div><!-- end row -->
+    </div>
 </div>
 
 {% else %}
 No search results for this query
 {% endif %}
 {% endif %}
-<!-- <script>
-    $(document).ready(function () {
-        $(".post-media").on("click", function () {
-            // var dataId = $(this).attr("data-heading");
-            $(this).addClass("actives")
-            // $('.post-media').eq(0).attr('id', 'foobar');
-            var imagesss = $('.actives').children('img').map(function () {
-                return $(this).attr('src')
-            }).get()
-
-            // alert("The data-id of clicked item is: " + imagesss);
-
-
-            $('#asdf').on('show.bs.modal', function (event) {
-                var imagess = $('#media-grab').children('img').map(function () {
-                    return $(this).attr('src')
-                }).get()
-                var button = $(event.relatedTarget) // Button that triggered the modal
-                var heading = button.data('heading')
-                var news = button.data('news')
-                var category = button.data('category')
-                var timestamp = button.data('timestamp')
-                var images = button.data('images')
-                var author = button.data('author') // Extract info from data-* attributes
-                // If necessary, you could  an AJAX request here (and then do the updating in a callback).
-                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-                var modal = $(this)
-                modal.find('#heads').text(heading)
-                modal.find('#news').text(news)
-                modal.find('#category').text(category)
-                modal.find('#author').text(author)
-                modal.find('#timestamp').text(timestamp)
-                var i = 0,
-                    len = imagesss.length;
-                for (; i < imagesss.length; i++) {
-                    // modal.find('#owl-images').attr('src', imagess[3])
-                    // modal.find('#owl-images').append("<div class='item'><img class='roll' src='" + imagess[i] + "'></div>");
-                    modal.find('#owl-images').trigger('add.owl.carousel', ['<div class="item" id="items-id"><img src="' + imagesss[i] + '" alt="" class="carousel-images"></div>'])
-                        .trigger('refresh.owl.carousel');
-
-                    //    x.append("<img class='roll' src='" + imagess[i] + "'>");
-                }
-
-
-            })
-        });
-
-    });
-</script>
-<!-- <script src="{% static 'owlcarousel/script.js' %}" type="text/JavaScript"></script> -->
-<script src="{% static 'js/owl.carousel.min.js' %}" type="text/JavaScript"></script>
-<script src="{% static 'js/all_news.js' %}" type="text/JavaScript"></script>
-<script src="{% static 'js/urlchange.js' %}" type="text/JavaScript"></script> -->
 {% endblock%}
 

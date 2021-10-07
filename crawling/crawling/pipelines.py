@@ -22,17 +22,6 @@ def clean_author(param):
     param = param.strip()
     return param
 
-# def clean_poster(param):
-#     if param:
-#         param = param[0]['path']
-#     return param
-
-# def clean_amount_reviews(param):
-#     return param.strip()
-
-# def clean_approval_percentage(param):
-#     return param.strip().replace('%', '')
-
 
 class CrawlingPipeline(object):
     def process_item(self, item, spider):
@@ -42,8 +31,8 @@ class CrawlingPipeline(object):
         author = clean_author(item['author'])
         date_published = item['date_published']
         date_created = item['date_created']
-        # amount_reviews = clean_amount_reviews(item['amount_reviews'])
-        # approval_percentage = clean_approval_percentage(item['approval_percentage'])
+        source = item['source']
+        url = item['url']
 
         News.objects.create(
             title=title,
@@ -52,6 +41,8 @@ class CrawlingPipeline(object):
             author=author,
             date_created=date_created,
             date_published=date_published,
+            source= source,
+            url = url
         )
 
         return item

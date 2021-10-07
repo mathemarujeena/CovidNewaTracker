@@ -1,5 +1,4 @@
 {% load static %}
-
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -8,20 +7,27 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
     integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
     crossorigin="anonymous" />
-    <link rel="stylesheet" type="text/css" href="{% static 'newsstyle.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'custom-css/responsive.css' %}" />
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm bg-light">
-        <ul class="navbar-nav">
-          <li class="nav-item">
+  {% block scripts %}
+  {% endblock scripts %}
+  <nav class="navbar navbar-expand-sm bg-light">
+    <ul class="navbar-nav">
+        
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'dashboard' %}">Dashboard {{user}}</a>
+        </li>
+        {% if perms.news.add_news %}
+        <li class="nav-item">
             <a class="nav-link" href="{% url 'news-form' %}">Scrape</a>
-          </li>
-          <li class="nav-item">
+        </li>
+        {% endif %}
+        <li class="nav-item">
             <a class="nav-link" href="{% url 'all-news' %}">All News</a>
-          </li>
-          <li class="nav-item">
+        </li>
+        <li class="nav-item">
             <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'nsearch' %}">
                 <div class="input-group">
                     <input class="form-control bg-light border-0 small" type="search" name="search" placeholder="Search For.." aria-label="Search"/>
@@ -32,10 +38,27 @@
                     </div>
                 </div>
             </form>
-          </li>
-        </ul>
-      </nav>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+        </li>
+        
+        {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="/login">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/register">Register</a>
+        </li>
+        {% endif %}
+
+    </ul>
+</nav>
   <div class="container">
+    
     {% block content %}
     {% if messages %}
         {% for message in messages %}
@@ -50,6 +73,6 @@
 </body>
 </html>
 
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'all_news.js' %}" type="text/JavaScript"></script>
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

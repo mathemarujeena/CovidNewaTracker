@@ -1,0 +1,93 @@
+{% extends 'news/base.html' %}
+
+{% load crispy_forms_tags %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+var config = {
+      type: 'pie',
+      data: {
+        datasets: [{
+            data: {{datas|safe }},
+            backgroundColor: [
+                'rgba(255, 99, 132, 1)', 
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(200, 201, 150, 1)',
+                'rgba(150, 120, 170, 1)',
+                'rgba(253, 012, 149, 1)',
+                'rgba(102, 093, 240, 1)',
+                'rgba(236, 125, 240, 1)',
+                'rgba(085, 093, 045, 1)',
+                'rgba(005, 125, 240, 1)',
+                'rgba(125, 093, 365, 1)',
+                // '#696969', '#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3'
+            ],
+            label: 'Number of Post Per Author'
+        }],
+        labels: {{ labels|safe }}
+      },
+      options: {
+        responsive: true
+      }
+    };
+
+    window.onload = function() {
+      var ctx = document.getElementById('pie-chart').getContext('2d');
+      window.myPie = new Chart(ctx, config);
+    };
+
+</script>
+{% endblock scripts %}
+
+{% block content %}
+    {% if perms.news.view_news %}
+          <div class="row">
+            <div class="col-lg-6 col-xl-3 mb-4">
+                <div class="card bg-primary text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="me-3">
+                                <div class="text-white-75 small">Number of News</div>
+                                <div class="text-lg fw-bold">{{total_articles}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-3 mb-4">
+                <div class="card bg-success text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="me-3">
+                                <div class="text-white-75 small">Number of Sources</div>
+                                <div class="text-lg fw-bold">{{no_of_sources}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-3 mb-4">
+                <div class="card bg-warning text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="me-3">
+                                <div class="text-white-75 small">Number of Authors</div>
+                                <div class="text-lg fw-bold">{{no_of_authors}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="container" style="width: 75%;">
+            <h5>No of News Per Source</h5>
+            <canvas id="pie-chart"></canvas>
+          </div>
+    
+    {% endif %}
+          
+{% endblock %}
